@@ -38,8 +38,8 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-starter-web:2.5.10") // Secure and stable
 
     // Upgrade to Log4j2 which resolves vulnerabilities found in Log4j 1.x
-    implementation ("org.apache.logging.log4j:log4j-core:2.14.1")
-    implementation ("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation ("org.apache.logging.log4j:log4j-core:2.25.2")
+    implementation ("org.apache.logging.log4j:log4j-api:2.25.2")
 
     // Upgrade to latest Gson version
     implementation ("com.google.code.gson:gson:2.8.9")
