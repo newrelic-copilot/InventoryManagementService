@@ -31,7 +31,7 @@ tasks.register<Copy>("unzipNewrelic") {
 }
 
 dependencies {
-    implementation ("commons-fileupload:commons-fileupload:1.3.3")
+    implementation ("commons-fileupload:commons-fileupload:1.6.0")
     implementation ("org.apache.commons:commons-lang3:3.9")
     implementation ("org.apache.commons:commons-collections4:4.4")
 
