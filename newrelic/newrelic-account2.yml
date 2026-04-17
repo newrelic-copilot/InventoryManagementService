@@ -1,0 +1,42 @@
+common: &default_settings
+  license_key: '<%= ENV["NEW_RELIC_LICENSE_KEY_2"] %>'
+  app_name: InventoryManagementService
+  log_level: info
+  audit_mode: false
+
+  labels:
+    repository: https://github.com/newrelic-copilot/InventoryManagementService
+    team: security_rx
+    environment: production
+
+  distributed_tracing:
+    enabled: true
+
+  security:
+    enabled: true
+    agent:
+      enabled: true
+
+  application_logging:
+    enabled: true
+    forwarding:
+      enabled: true
+      max_samples_stored: 10000
+    metrics:
+      enabled: true
+    local_decorating:
+      enabled: false
+
+  code_level_metrics:
+    enabled: true
+
+development:
+  <<: *default_settings
+  app_name: InventoryManagementService (Development)
+
+staging:
+  <<: *default_settings
+  app_name: InventoryManagementService (Staging)
+
+production:
+  <<: *default_settings
