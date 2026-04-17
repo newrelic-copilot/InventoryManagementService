@@ -1,6 +1,6 @@
 common: &default_settings
   license_key: '<%= ENV["NEW_RELIC_LICENSE_KEY_2"] %>'
-  app_name: InventoryManagementService-Account2
+  app_name: InventoryManagementService
   log_level: info
   audit_mode: false
 
@@ -32,11 +32,11 @@ common: &default_settings
 
 development:
   <<: *default_settings
-  app_name: InventoryManagementService-Account2 (Development)
+  app_name: InventoryManagementService (Development)
 
 staging:
   <<: *default_settings
-  app_name: InventoryManagementService-Account2 (Staging)
+  app_name: InventoryManagementService (Staging)
 
 production:
   <<: *default_settings
