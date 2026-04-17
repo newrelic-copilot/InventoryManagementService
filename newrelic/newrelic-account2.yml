@@ -6,9 +6,16 @@ common: &default_settings
 
   labels:
     repository: https://github.com/newrelic-copilot/InventoryManagementService
+    team: security_rx
+    environment: production
 
   distributed_tracing:
     enabled: true
+
+  security:
+    enabled: true
+    agent:
+      enabled: true
 
   application_logging:
     enabled: true
@@ -19,6 +26,9 @@ common: &default_settings
       enabled: true
     local_decorating:
       enabled: false
+
+  code_level_metrics:
+    enabled: true
 
 development:
   <<: *default_settings
