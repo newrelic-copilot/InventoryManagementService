@@ -46,9 +46,9 @@ dependencies {
 
     implementation ("com.google.guava:guava:18.0")
 
-    implementation ("com.fasterxml.jackson.core:jackson-databind:2.8.11")
-    implementation ("com.fasterxml.jackson.core:jackson-core:2.8.11")
-    implementation ("com.fasterxml.jackson.core:jackson-annotations:2.8.11")
+    implementation ("com.fasterxml.jackson.core:jackson-databind")
+    implementation ("com.fasterxml.jackson.core:jackson-core")
+    implementation ("com.fasterxml.jackson.core:jackson-annotations")
 
     implementation ("commons-net:commons-net:3.6")
 
