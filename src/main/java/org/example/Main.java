@@ -15,7 +15,6 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFact
 
 import com.google.common.io.Files;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -116,7 +115,7 @@ public class Main {
         try {
             Object result = mapper.readValue(jsonInput, Object.class);
             System.out.println("Jackson deserialization completed: " + result);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             System.out.println("Jackson processing failed: " + e.getMessage());
         }
     }
