@@ -17,57 +17,70 @@ import com.google.common.io.Files;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@SpringBootApplication
+@RestController
 public class Main {
     static Logger logger = Logger.getLogger(String.valueOf(Main.class));
 
     public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
         logger.info("Application started with dependencies!");
-        System.out.println("Hello, World!");
         processFileName("myFile.txt");
         useStringUtils("  test  ");
         fileUploadExample();
         FileOperations fo = new FileOperations();
         fo.fewMore();
-
         useGuava();
         useJackson();
         useCommonsNet();
+
         Transformer<String, String> transformer = new InvokerTransformer<>(
                 "toString",
                 new Class[]{},
                 new Object[]{}
         );
-        
         Map<String, String> lazyMap = LazyMap.lazyMap(new HashMap<String, String>(), transformer);
         lazyMap.put("key", "value");
+    }
 
-        try {
-            System.out.println("Server is running. Press Ctrl+C to stop.");
-            Thread.currentThread().join(); // Keeps the main thread alive
-        } catch (InterruptedException e) {
-            logger.warning("Server interrupted: " + e.getMessage());
-        }
+    @GetMapping("/health")
+    public Map<String, String> health() {
+        return Map.of("status", "UP", "service", "InventoryManagementService");
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "InventoryManagementService is running";
     }
 
     public void performComplexOperations() {
         Gson gson = new Gson();
-        String jsonBad = "{\"dateField\":\"invalid-date-format\"}"; // Test serialization issues
+        String jsonBad = "{\"dateField\":\"invalid-date-format\"}";
 
         try {
-            MyModel myModel = gson.fromJson(jsonBad, MyModel.class); // Considering breaking changes in handling of dates
+            MyModel myModel = gson.fromJson(jsonBad, MyModel.class);
         } catch (Exception e) {
             logger.info("Error in processing due to compatibility");
         }
 
         ConfigurationBuilder<?> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-        builder.add(builder.newRootLogger(Level.ERROR));  // Reflect how configurations may fail across major upgrades
+        builder.add(builder.newRootLogger(Level.ERROR));
     }
 
     public static void processFileName(String name) {
@@ -82,7 +95,6 @@ public class Main {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
         factory.setRepository(tempDir);
-        // We are not actually processing a request here, just instantiating
         System.out.println("File upload factory created.");
     }
 

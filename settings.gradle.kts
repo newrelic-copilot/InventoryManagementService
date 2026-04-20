@@ -1,2 +1,1 @@
-rootProject.name = "BillingService"
-
+rootProject.name = "InventoryManagementService"
