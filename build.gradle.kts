@@ -10,6 +10,10 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
+// Override Spring Framework version to fix GHSA-564r-hj7v-mcr5 (SpEL DoS vulnerability).
+// Spring Boot 2.5.x manages Spring Framework 5.3.x; 5.3.27 is the first patched release in that line.
+ext["spring-framework.version"] = "5.3.27"
+
 repositories {
     mavenCentral()
 }
