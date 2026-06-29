@@ -18,6 +18,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +39,18 @@ public class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
+    }
+
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatHeaderLimitsCustomizer(
+            @Value("${server.max-http-header-size:8192}") int configuredMaxHeaderSize,
+            @Value("${server.tomcat.max-header-count:100}") int configuredMaxHeaderCount
+    ) {
+        return factory -> factory.addConnectorCustomizers(connector -> {
+            connector.setProperty("maxHttpHeaderSize", String.valueOf(configuredMaxHeaderSize));
+            connector.setProperty("maxHttpRequestHeaderSize", String.valueOf(configuredMaxHeaderSize));
+            connector.setProperty("maxHeaderCount", String.valueOf(configuredMaxHeaderCount));
+        });
     }
 
     @PostConstruct
