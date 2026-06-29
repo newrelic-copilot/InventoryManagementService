@@ -6,8 +6,12 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.logging.Logger;
+
 @Configuration
 public class TomcatHardeningConfig {
+
+    private static final Logger LOGGER = Logger.getLogger(TomcatHardeningConfig.class.getName());
 
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatSecurityCustomizer() {
@@ -15,6 +19,8 @@ public class TomcatHardeningConfig {
             Wrapper defaultServlet = (Wrapper) context.findChild("default");
             if (defaultServlet != null) {
                 hardenDefaultServlet(defaultServlet);
+            } else {
+                LOGGER.warning("Tomcat default servlet not found; unable to enforce partial PUT hardening.");
             }
         });
     }
