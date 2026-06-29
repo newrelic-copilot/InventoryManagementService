@@ -20,6 +20,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,10 +42,13 @@ public class Main {
     }
 
     @Bean
-    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatHeaderLimitsCustomizer() {
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatHeaderLimitsCustomizer(
+            @Value("${server.max-http-header-size:8192}") int maxHttpRequestHeaderSize,
+            @Value("${server.tomcat.max-header-count:100}") int maxHeaderCount
+    ) {
         return factory -> factory.addConnectorCustomizers(connector -> {
-            connector.setProperty("maxHttpRequestHeaderSize", "8192");
-            connector.setProperty("maxHeaderCount", "100");
+            connector.setProperty("maxHttpRequestHeaderSize", String.valueOf(maxHttpRequestHeaderSize));
+            connector.setProperty("maxHeaderCount", String.valueOf(maxHeaderCount));
         });
     }
 
