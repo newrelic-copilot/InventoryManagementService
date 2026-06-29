@@ -43,12 +43,12 @@ public class Main {
 
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatHeaderLimitsCustomizer(
-            @Value("${server.max-http-header-size:8192}") int maxHttpRequestHeaderSize,
-            @Value("${server.tomcat.max-header-count:100}") int maxHeaderCount
+            @Value("${server.max-http-header-size:8192}") int configuredMaxHeaderSize,
+            @Value("${server.tomcat.max-header-count:100}") int configuredMaxHeaderCount
     ) {
         return factory -> factory.addConnectorCustomizers(connector -> {
-            connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpRequestHeaderSize));
-            connector.setProperty("maxHeaderCount", String.valueOf(maxHeaderCount));
+            connector.setProperty("maxHttpHeaderSize", String.valueOf(configuredMaxHeaderSize));
+            connector.setProperty("maxHeaderCount", String.valueOf(configuredMaxHeaderCount));
         });
     }
 
