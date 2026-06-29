@@ -19,7 +19,7 @@ public class TomcatHardeningConfig {
         });
     }
 
-    void hardenDefaultServlet(Wrapper defaultServlet) {
+    private void hardenDefaultServlet(Wrapper defaultServlet) {
         defaultServlet.addInitParameter("readonly", "true");
         defaultServlet.addInitParameter("allowPartialPut", "false");
     }
