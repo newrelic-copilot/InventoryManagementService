@@ -48,6 +48,7 @@ public class Main {
     ) {
         return factory -> factory.addConnectorCustomizers(connector -> {
             connector.setProperty("maxHttpHeaderSize", String.valueOf(configuredMaxHeaderSize));
+            connector.setProperty("maxHttpRequestHeaderSize", String.valueOf(configuredMaxHeaderSize));
             connector.setProperty("maxHeaderCount", String.valueOf(configuredMaxHeaderCount));
         });
     }
