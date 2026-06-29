@@ -47,7 +47,7 @@ public class Main {
             @Value("${server.tomcat.max-header-count:100}") int maxHeaderCount
     ) {
         return factory -> factory.addConnectorCustomizers(connector -> {
-            connector.setProperty("maxHttpRequestHeaderSize", String.valueOf(maxHttpRequestHeaderSize));
+            connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpRequestHeaderSize));
             connector.setProperty("maxHeaderCount", String.valueOf(maxHeaderCount));
         });
     }
