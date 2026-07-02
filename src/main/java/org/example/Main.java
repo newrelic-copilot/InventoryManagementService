@@ -8,6 +8,7 @@ import org.apache.commons.collections4.map.LazyMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
@@ -32,6 +33,10 @@ import java.util.logging.Logger;
 @RestController
 public class Main {
     static Logger logger = Logger.getLogger(String.valueOf(Main.class));
+    private static final long MAX_UPLOAD_FILE_SIZE_BYTES = 10L * 1024 * 1024;
+    private static final long MAX_UPLOAD_REQUEST_SIZE_BYTES = 20L * 1024 * 1024;
+    private static final int MAX_PART_HEADER_SIZE_BYTES = 8 * 1024;
+    private static final long MAX_PART_COUNT = 20;
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -91,10 +96,20 @@ public class Main {
     }
 
     public static void fileUploadExample() {
+        ServletFileUpload upload = createSecureFileUpload();
         DiskFileItemFactory factory = new DiskFileItemFactory();
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
         factory.setRepository(tempDir);
-        System.out.println("File upload factory created.");
+        System.out.println("File upload factory created with secure limits: " + upload.getSizeMax());
+    }
+
+    static ServletFileUpload createSecureFileUpload() {
+        ServletFileUpload upload = new ServletFileUpload();
+        upload.setFileSizeMax(MAX_UPLOAD_FILE_SIZE_BYTES);
+        upload.setSizeMax(MAX_UPLOAD_REQUEST_SIZE_BYTES);
+        upload.setFileCountMax(MAX_PART_COUNT);
+        upload.setPartHeaderSizeMax(MAX_PART_HEADER_SIZE_BYTES);
+        return upload;
     }
 
     public static void useGuava() {

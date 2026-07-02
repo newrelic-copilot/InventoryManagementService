@@ -33,7 +33,7 @@ tasks.register<Copy>("unzipNewrelic") {
 }
 
 dependencies {
-    implementation ("commons-fileupload:commons-fileupload:1.3.3")
+    implementation ("commons-fileupload:commons-fileupload:1.6.0")
     implementation ("org.apache.commons:commons-lang3:3.9")
     implementation ("org.apache.commons:commons-collections4:4.4")
 
@@ -52,8 +52,7 @@ dependencies {
 
     implementation ("commons-net:commons-net:3.6")
 
-    testImplementation ("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation ("org.junit.jupiter:junit-jupiter:5.10.2")
 }
 
 tasks.test {
