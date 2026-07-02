@@ -4,6 +4,7 @@ import Model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
@@ -11,6 +12,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileOperations {
+    private static final long MAX_UPLOAD_FILE_SIZE_BYTES = 10L * 1024 * 1024;
+    private static final long MAX_UPLOAD_REQUEST_SIZE_BYTES = 20L * 1024 * 1024;
+    private static final int MAX_PART_HEADER_SIZE_BYTES = 8 * 1024;
+    private static final long MAX_PART_COUNT = 20;
+
     public void fewMore() {
         System.out.println("Hello, Vulnerable World!");
         processFileName(" myFile.txt ");
@@ -29,10 +35,20 @@ public class FileOperations {
     }
 
     public static void fileUploadExample() {
+        ServletFileUpload upload = createSecureFileUpload();
+        System.out.println("File upload factory created with secure limits: " + upload.getSizeMax());
+    }
+
+    static ServletFileUpload createSecureFileUpload() {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
         factory.setRepository(tempDir);
-        System.out.println("File upload factory created.");
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setFileSizeMax(MAX_UPLOAD_FILE_SIZE_BYTES);
+        upload.setSizeMax(MAX_UPLOAD_REQUEST_SIZE_BYTES);
+        upload.setFileCountMax(MAX_PART_COUNT);
+        upload.setPartHeaderSizeMax(MAX_PART_HEADER_SIZE_BYTES);
+        return upload;
     }
 
 //    public static void useJackson() {
@@ -71,4 +87,3 @@ public class FileOperations {
         System.out.println("Spring's ObjectMapper created: " + springObjectMapper.getClass().getName());
     }
 }
-
