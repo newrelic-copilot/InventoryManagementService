@@ -97,14 +97,14 @@ public class Main {
 
     public static void fileUploadExample() {
         ServletFileUpload upload = createSecureFileUpload();
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        File tempDir = new File(System.getProperty("java.io.tmpdir"));
-        factory.setRepository(tempDir);
         System.out.println("File upload factory created with secure limits: " + upload.getSizeMax());
     }
 
     static ServletFileUpload createSecureFileUpload() {
-        ServletFileUpload upload = new ServletFileUpload();
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        File tempDir = new File(System.getProperty("java.io.tmpdir"));
+        factory.setRepository(tempDir);
+        ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setFileSizeMax(MAX_UPLOAD_FILE_SIZE_BYTES);
         upload.setSizeMax(MAX_UPLOAD_REQUEST_SIZE_BYTES);
         upload.setFileCountMax(MAX_PART_COUNT);
