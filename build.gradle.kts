@@ -18,11 +18,9 @@ repositories {
 
 dependencyManagement {
     dependencies {
-        dependencySet("org.apache.logging.log4j:$log4jVersion") {
-            entry("log4j-api")
-            entry("log4j-core")
-            entry("log4j-to-slf4j")
-        }
+        dependency("org.apache.logging.log4j:log4j-api:$log4jVersion")
+        dependency("org.apache.logging.log4j:log4j-core:$log4jVersion")
+        dependency("org.apache.logging.log4j:log4j-to-slf4j:$log4jVersion")
     }
 }
 
