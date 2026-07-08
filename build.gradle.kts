@@ -10,8 +10,18 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
+val log4jVersion = "2.17.2"
+
 repositories {
     mavenCentral()
+}
+
+dependencyManagement {
+    dependencies {
+        dependency("org.apache.logging.log4j:log4j-api:$log4jVersion")
+        dependency("org.apache.logging.log4j:log4j-core:$log4jVersion")
+        dependency("org.apache.logging.log4j:log4j-to-slf4j:$log4jVersion")
+    }
 }
 
 tasks.register("downloadNewrelic") {
@@ -39,8 +49,8 @@ dependencies {
 
     implementation ("org.springframework.boot:spring-boot-starter-web")
 
-    implementation ("org.apache.logging.log4j:log4j-core:2.14.1")
-    implementation ("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation ("org.apache.logging.log4j:log4j-core")
+    implementation ("org.apache.logging.log4j:log4j-api")
 
     implementation ("com.google.code.gson:gson:2.8.9")
 
