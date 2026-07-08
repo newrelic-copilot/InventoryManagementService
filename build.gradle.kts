@@ -10,6 +10,9 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
+val log4jVersion = "2.17.2"
+extra["log4j2.version"] = log4jVersion
+
 repositories {
     mavenCentral()
 }
@@ -39,8 +42,8 @@ dependencies {
 
     implementation ("org.springframework.boot:spring-boot-starter-web")
 
-    implementation ("org.apache.logging.log4j:log4j-core:2.14.1")
-    implementation ("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation ("org.apache.logging.log4j:log4j-core")
+    implementation ("org.apache.logging.log4j:log4j-api")
 
     implementation ("com.google.code.gson:gson:2.8.9")
 
