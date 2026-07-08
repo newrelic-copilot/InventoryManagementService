@@ -11,10 +11,19 @@ group = "org.example"
 version = "1.0-SNAPSHOT"
 
 val log4jVersion = "2.17.2"
-extra["log4j2.version"] = log4jVersion
 
 repositories {
     mavenCentral()
+}
+
+dependencyManagement {
+    dependencies {
+        dependencySet("org.apache.logging.log4j:$log4jVersion") {
+            entry("log4j-api")
+            entry("log4j-core")
+            entry("log4j-to-slf4j")
+        }
+    }
 }
 
 tasks.register("downloadNewrelic") {
