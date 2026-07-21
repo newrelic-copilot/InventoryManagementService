@@ -39,8 +39,8 @@ dependencies {
 
     implementation ("org.springframework.boot:spring-boot-starter-web")
 
-    implementation ("org.apache.logging.log4j:log4j-core:2.14.1")
-    implementation ("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation ("org.apache.logging.log4j:log4j-core:2.17.1")
+    implementation ("org.apache.logging.log4j:log4j-api:2.17.1")
 
     implementation ("com.google.code.gson:gson:2.8.9")
 
@@ -54,6 +54,15 @@ dependencies {
 
     testImplementation ("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+
+    constraints {
+        implementation("org.apache.logging.log4j:log4j-core:2.17.1") {
+            because("CVE-2021-44228 (Log4Shell) and related advisories; versions before 2.17.1 allow remote code execution via JNDI lookups")
+        }
+        implementation("org.apache.logging.log4j:log4j-api:2.17.1") {
+            because("CVE-2021-44228 (Log4Shell) and related advisories; versions before 2.17.1 allow remote code execution via JNDI lookups")
+        }
+    }
 }
 
 tasks.test {
