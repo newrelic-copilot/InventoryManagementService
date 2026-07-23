@@ -68,16 +68,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
                             String locationPrefix = locationFile.getPath() + java.io.File.separator;
                             return resourceFile.getPath().startsWith(locationPrefix);
                         } catch (java.io.IOException fileException) {
-                            // Fall back to URL comparison for non-file resources (e.g. classpath jars)
+                            // Fall back to URL comparison for non-file resources (e.g. classpath jars).
+                            // Jar entries on the classpath are served from a case-sensitive archive,
+                            // so a case-sensitive comparison is correct here.
                             try {
                                 String locationUrl = location.getURL().toExternalForm();
                                 if (!locationUrl.endsWith("/")) {
                                     locationUrl = locationUrl + "/";
                                 }
                                 String resourceUrl = resource.getURL().toExternalForm();
-                                // Normalise both URLs to lower-case for case-insensitive file systems
-                                return resourceUrl.toLowerCase(java.util.Locale.ROOT)
-                                        .startsWith(locationUrl.toLowerCase(java.util.Locale.ROOT));
+                                return resourceUrl.startsWith(locationUrl);
                             } catch (java.io.IOException urlException) {
                                 return false;
                             }

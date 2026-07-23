@@ -81,7 +81,7 @@ public class PathTraversalFilter implements Filter {
             try {
                 decoded = URLDecoder.decode(current, StandardCharsets.UTF_8);
             } catch (Exception e) {
-                // Malformed encoding – treat as suspicious
+                // Malformed encoding (IllegalArgumentException) – treat as suspicious
                 return true;
             }
             if (decoded.equals(current)) {
@@ -117,7 +117,7 @@ public class PathTraversalFilter implements Filter {
             if (normalizedStr.startsWith("../") || normalizedStr.equals("..")) {
                 return true;
             }
-        } catch (Exception ignored) {
+        } catch (java.nio.file.InvalidPathException ignored) {
             // If path parsing fails treat it as suspicious
             return true;
         }

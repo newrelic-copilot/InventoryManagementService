@@ -13,6 +13,8 @@ version = "1.0-SNAPSHOT"
 // The officially patched version (5.3.41) is not yet published to Maven Central;
 // 5.3.39 is the highest available 5.3.x release. Application-level mitigations
 // (PathTraversalFilter and WebMvcConfig) are also applied to compensate.
+// TODO: Once org.springframework:spring-framework-bom:5.3.41 (or later) is
+//       available on Maven Central, update this version accordingly.
 ext["spring-framework.version"] = "5.3.39"
 
 repositories {
