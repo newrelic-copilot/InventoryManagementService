@@ -51,16 +51,30 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     /**
                      * Verifies that {@code resource} is contained within {@code location} so
                      * that a crafted path cannot escape the intended base directory.
+                     * Canonical file paths are used where available to neutralise any remaining
+                     * encoding or normalisation differences.
                      */
                     private boolean isWithinLocation(
                             org.springframework.core.io.Resource location,
                             org.springframework.core.io.Resource resource) {
                         try {
-                            String locationPath = location.getURL().toExternalForm();
-                            String resourcePath = resource.getURL().toExternalForm();
-                            return resourcePath.startsWith(locationPath);
-                        } catch (java.io.IOException e) {
-                            return false;
+                            // Prefer canonical File paths (resolves symlinks, normalises ..)
+                            java.io.File locationFile = location.getFile().getCanonicalFile();
+                            java.io.File resourceFile = resource.getFile().getCanonicalFile();
+                            return resourceFile.getPath().startsWith(locationFile.getPath()
+                                    + java.io.File.separator)
+                                    || resourceFile.equals(locationFile);
+                        } catch (java.io.IOException fileException) {
+                            // Fall back to URL comparison for non-file resources (e.g. classpath jars)
+                            try {
+                                String locationUrl = location.getURL().toExternalForm();
+                                String resourceUrl = resource.getURL().toExternalForm();
+                                // Normalise both URLs to lower-case for case-insensitive file systems
+                                return resourceUrl.toLowerCase(java.util.Locale.ROOT)
+                                        .startsWith(locationUrl.toLowerCase(java.util.Locale.ROOT));
+                            } catch (java.io.IOException urlException) {
+                                return false;
+                            }
                         }
                     }
                 });

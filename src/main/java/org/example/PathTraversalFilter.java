@@ -12,8 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 /**
@@ -59,28 +59,32 @@ public class PathTraversalFilter implements Filter {
 
     /**
      * Returns {@code true} if the given URI contains a directory traversal sequence.
-     * Both raw and URL-decoded forms are checked so that encoded variants such as
-     * {@code %2e%2e} or {@code %2F} are also caught.
+     * The URI is decoded iteratively until it stabilises so that double- and
+     * multi-encoded variants (e.g. {@code %252e%252e}, {@code %2e%2e}) are also
+     * detected.
      */
     static boolean containsPathTraversal(String uri) {
         if (uri == null) {
             return false;
         }
 
-        // Check raw URI
-        if (hasTraversalSegment(uri)) {
-            return true;
-        }
-
-        // Check decoded URI
-        try {
-            String decoded = new URI(uri).getPath();
-            if (decoded != null && hasTraversalSegment(decoded)) {
+        String current = uri;
+        // Iteratively decode until the value no longer changes (handles double/multi encoding)
+        while (true) {
+            if (hasTraversalSegment(current)) {
                 return true;
             }
-        } catch (URISyntaxException ignored) {
-            // If the URI cannot be parsed, treat it as suspicious
-            return true;
+            String decoded;
+            try {
+                decoded = URLDecoder.decode(current, StandardCharsets.UTF_8.name());
+            } catch (Exception e) {
+                // Malformed encoding – treat as suspicious
+                return true;
+            }
+            if (decoded.equals(current)) {
+                break; // fully decoded, no traversal found
+            }
+            current = decoded;
         }
 
         return false;
