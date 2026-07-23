@@ -1,14 +1,19 @@
-import org.gradle.wrapper.Download
-
 plugins {
     id("java")
-    id("org.springframework.boot") version "2.5.10"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "2.7.18"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("de.undercouch.download") version "5.3.0"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+// Force the latest available Spring Framework 5.3.x release to mitigate
+// CVE-2024-38819 (path traversal in WebMvc/WebFlux static resource handling).
+// The officially patched version (5.3.41) is not yet published to Maven Central;
+// 5.3.39 is the highest available 5.3.x release. Application-level mitigations
+// (PathTraversalFilter and WebMvcConfig) are also applied to compensate.
+ext["spring-framework.version"] = "5.3.39"
 
 repositories {
     mavenCentral()
