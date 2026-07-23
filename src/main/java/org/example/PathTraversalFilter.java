@@ -61,7 +61,8 @@ public class PathTraversalFilter implements Filter {
      * Returns {@code true} if the given URI contains a directory traversal sequence.
      * The URI is decoded iteratively until it stabilises so that double- and
      * multi-encoded variants (e.g. {@code %252e%252e}, {@code %2e%2e}) are also
-     * detected.
+     * detected. A maximum of 10 decoding rounds is applied to prevent DoS via
+     * deeply nested encoding.
      */
     static boolean containsPathTraversal(String uri) {
         if (uri == null) {
@@ -70,13 +71,15 @@ public class PathTraversalFilter implements Filter {
 
         String current = uri;
         // Iteratively decode until the value no longer changes (handles double/multi encoding)
-        while (true) {
+        // Capped at MAX_DECODE_ROUNDS to prevent CPU exhaustion via deeply nested encoding.
+        final int MAX_DECODE_ROUNDS = 10;
+        for (int round = 0; round < MAX_DECODE_ROUNDS; round++) {
             if (hasTraversalSegment(current)) {
                 return true;
             }
             String decoded;
             try {
-                decoded = URLDecoder.decode(current, StandardCharsets.UTF_8.name());
+                decoded = URLDecoder.decode(current, StandardCharsets.UTF_8);
             } catch (Exception e) {
                 // Malformed encoding – treat as suspicious
                 return true;
@@ -93,12 +96,32 @@ public class PathTraversalFilter implements Filter {
     private static boolean hasTraversalSegment(String path) {
         // Normalise path separators before checking
         String normalised = path.replace('\\', '/');
-        return normalised.contains("/../")
+
+        // Check for common traversal patterns including same-directory references
+        if (normalised.contains("/../")
                 || normalised.contains("/./")
                 || normalised.endsWith("/..")
                 || normalised.endsWith("/.")
                 || normalised.startsWith("../")
+                || normalised.startsWith("./")
                 || normalised.equals("..")
-                || normalised.equals(".");
+                || normalised.equals(".")) {
+            return true;
+        }
+
+        // Use Path.normalize() for a definitive check: if the normalised path begins
+        // with ".." it would escape outside any intended root directory.
+        try {
+            java.nio.file.Path p = java.nio.file.Paths.get(normalised).normalize();
+            String normalizedStr = p.toString().replace('\\', '/');
+            if (normalizedStr.startsWith("../") || normalizedStr.equals("..")) {
+                return true;
+            }
+        } catch (Exception ignored) {
+            // If path parsing fails treat it as suspicious
+            return true;
+        }
+
+        return false;
     }
 }

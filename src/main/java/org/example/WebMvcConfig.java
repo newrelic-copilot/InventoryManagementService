@@ -49,10 +49,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     }
 
                     /**
-                     * Verifies that {@code resource} is contained within {@code location} so
-                     * that a crafted path cannot escape the intended base directory.
+                     * Verifies that {@code resource} is strictly contained within {@code location}
+                     * so that a crafted path cannot escape the intended base directory.
                      * Canonical file paths are used where available to neutralise any remaining
-                     * encoding or normalisation differences.
+                     * encoding or normalisation differences.  The separator is always appended to
+                     * the location path before the prefix check to prevent partial-name matches
+                     * (e.g. {@code /app/static-evil} being accepted when location is
+                     * {@code /app/static}).
                      */
                     private boolean isWithinLocation(
                             org.springframework.core.io.Resource location,
@@ -61,13 +64,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
                             // Prefer canonical File paths (resolves symlinks, normalises ..)
                             java.io.File locationFile = location.getFile().getCanonicalFile();
                             java.io.File resourceFile = resource.getFile().getCanonicalFile();
-                            return resourceFile.getPath().startsWith(locationFile.getPath()
-                                    + java.io.File.separator)
-                                    || resourceFile.equals(locationFile);
+                            // Require the resource to be strictly inside the location directory
+                            String locationPrefix = locationFile.getPath() + java.io.File.separator;
+                            return resourceFile.getPath().startsWith(locationPrefix);
                         } catch (java.io.IOException fileException) {
                             // Fall back to URL comparison for non-file resources (e.g. classpath jars)
                             try {
                                 String locationUrl = location.getURL().toExternalForm();
+                                if (!locationUrl.endsWith("/")) {
+                                    locationUrl = locationUrl + "/";
+                                }
                                 String resourceUrl = resource.getURL().toExternalForm();
                                 // Normalise both URLs to lower-case for case-insensitive file systems
                                 return resourceUrl.toLowerCase(java.util.Locale.ROOT)
