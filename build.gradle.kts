@@ -14,6 +14,8 @@ repositories {
     mavenCentral()
 }
 
+extra["jackson-bom.version"] = "2.12.7"
+
 tasks.register("downloadNewrelic") {
     doLast {
             val newrelicDir = file("newrelic")
