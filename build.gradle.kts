@@ -32,6 +32,15 @@ tasks.register<Copy>("unzipNewrelic") {
     into(rootDir)
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.apache.logging.log4j") {
+            useVersion("2.17.1")
+            because("CVE-2021-44228: Log4Shell RCE vulnerability fixed in 2.16.0+; using 2.17.1 which also fixes CVE-2021-45046")
+        }
+    }
+}
+
 dependencies {
     implementation ("commons-fileupload:commons-fileupload:1.3.3")
     implementation ("org.apache.commons:commons-lang3:3.9")
@@ -39,8 +48,8 @@ dependencies {
 
     implementation ("org.springframework.boot:spring-boot-starter-web")
 
-    implementation ("org.apache.logging.log4j:log4j-core:2.14.1")
-    implementation ("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation ("org.apache.logging.log4j:log4j-core:2.17.1")
+    implementation ("org.apache.logging.log4j:log4j-api:2.17.1")
 
     implementation ("com.google.code.gson:gson:2.8.9")
 
