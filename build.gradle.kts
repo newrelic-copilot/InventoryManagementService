@@ -2,7 +2,7 @@ import org.gradle.wrapper.Download
 
 plugins {
     id("java")
-    id("org.springframework.boot") version "2.5.10"
+    id("org.springframework.boot") version "2.5.12"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("de.undercouch.download") version "5.3.0"
 }
