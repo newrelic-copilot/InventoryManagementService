@@ -22,10 +22,18 @@ class SpringFrameworkVersionTest {
             return false;
         }
 
-        int major = Integer.parseInt(parts[0]);
-        int minor = Integer.parseInt(parts[1]);
-        int patch = Integer.parseInt(parts[2]);
+        int major = parseLeadingNumber(parts[0]);
+        int minor = parseLeadingNumber(parts[1]);
+        int patch = parseLeadingNumber(parts[2]);
+        if (major < 0 || minor < 0 || patch < 0) {
+            throw new IllegalArgumentException("Unexpected Spring Framework version: " + version);
+        }
 
         return major > 5 || (major == 5 && minor > 3) || (major == 5 && minor == 3 && patch >= 18);
+    }
+
+    private int parseLeadingNumber(String versionPart) {
+        String numericPrefix = versionPart.split("[^0-9]", 2)[0];
+        return numericPrefix.isEmpty() ? -1 : Integer.parseInt(numericPrefix);
     }
 }
