@@ -2,7 +2,7 @@ import org.gradle.wrapper.Download
 
 plugins {
     id("java")
-    id("org.springframework.boot") version "2.5.10"
+    id("org.springframework.boot") version "2.5.12"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("de.undercouch.download") version "5.3.0"
 }
@@ -52,8 +52,8 @@ dependencies {
 
     implementation ("commons-net:commons-net:3.6")
 
-    testImplementation ("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation ("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine")
 }
 
 tasks.test {
